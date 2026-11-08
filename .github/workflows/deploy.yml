@@ -55,8 +55,9 @@ jobs:
           compatibility_date = "2024-12-01"
           compatibility_flags = ["nodejs_compat"]
 
-          # Workers Custom Domain：DNS 记录与证书由 Cloudflare 自动创建
-          routes = [{ pattern = "monitor.toolfable.com", custom_domain = true }]
+          # 自定义域不写在这里：CI 的 API Token 没有 Zone→Workers Routes 权限，
+          # 写成 routes 会让 deploy 在 /zones/<id>/workers/routes 处 403。
+          # 域名已由本地 wrangler（仓库 wrangler.toml）绑定并在 Cloudflare 侧持久保存。
 
           # 定时任务配置（UTC）
           # - 每分钟：执行离线节点检测
