@@ -1,3 +1,7 @@
+# 反搜索引擎索引：静态资源层兜底（Worker 生成的响应另有 X-Robots-Tag 包装）
+/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex
+
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 

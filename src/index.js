@@ -181,7 +181,8 @@ async function fetchHistoryData(env, request, id, hours, columns, sys = null) {
   return createSuccessResponse(sanitizedData, { 'X-Cache': 'MISS' });
 }
 
-export default {
+// 所有 Worker 生成的响应统一加反抓取头，见文件末尾的 noIndex 包装
+const worker = {
   async fetch(request, env, ctx) {
     setDebug(env.DEBUG);
 
@@ -506,3 +507,37 @@ export default {
     }
   }
 };
+
+// ---------------------------------------------------------------------------
+// 反搜索引擎索引：给 Worker 生成的所有响应加 X-Robots-Tag
+// （robots.txt / meta robots / _headers 另外三层，四层互为兜底）
+// ---------------------------------------------------------------------------
+const NOINDEX_TAG = 'noindex, nofollow, noarchive, nosnippet, noimageindex';
+
+function noIndex(response) {
+  // WebSocket 升级（101）和多段响应不能动 headers
+  if (!response || response.status === 101) return response;
+
+  const headers = new Headers(response.headers);
+
+  // Headers 复制会把多条 Set-Cookie 合并成一条，这里按原样还原，避免登录 cookie 被写坏
+  if (typeof response.headers.getSetCookie === 'function') {
+    const cookies = response.headers.getSetCookie();
+    if (cookies.length > 0) {
+      headers.delete('Set-Cookie');
+      for (const cookie of cookies) headers.append('Set-Cookie', cookie);
+    }
+  }
+
+  headers.set('X-Robots-Tag', NOINDEX_TAG);
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  });
+}
+
+const _originalFetch = worker.fetch.bind(worker);
+worker.fetch = async (request, env, ctx) => noIndex(await _originalFetch(request, env, ctx));
+
+export default worker;

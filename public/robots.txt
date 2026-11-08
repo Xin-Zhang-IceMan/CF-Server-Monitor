@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# 监控面板与节点地址不对外索引。
+# 这是第一层防护，另有 X-Robots-Tag 响应头、HTML meta robots 和 _headers 兜底。
