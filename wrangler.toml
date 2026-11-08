@@ -37,4 +37,3 @@ new_sqlite_classes = ["MetricsBroadcaster"]
 [dev]
 port = 8787
 local_protocol = "https"
-# ci push trigger check
