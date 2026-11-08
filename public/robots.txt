@@ -1,5 +1,52 @@
+# 禁止抓取与索引。
+#
+# 注意：Cloudflare 的“Bot Preference Sync”会在这个文件前面插入托管内容，
+# 其中包含 `User-agent: *` + `Allow: /`。同一组里 Allow: / 与 Disallow: /
+# 等长时 Allow 优先，所以只写 * 组等于没写。
+# 下面给主流搜索引擎单独列组——robots.txt 规定引擎只读自己最具体的那一组，
+# 因此这些组不会被合进 * 组，Disallow 才真正生效。
+
 User-agent: *
 Disallow: /
 
-# 监控面板与节点地址不对外索引。
-# 这是第一层防护，另有 X-Robots-Tag 响应头、HTML meta robots 和 _headers 兜底。
+User-agent: Googlebot
+Disallow: /
+
+User-agent: Googlebot-Image
+Disallow: /
+
+User-agent: Googlebot-News
+Disallow: /
+
+User-agent: Bingbot
+Disallow: /
+
+User-agent: BingPreview
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: DuckDuckBot
+Disallow: /
+
+User-agent: Applebot
+Disallow: /
+
+User-agent: Sogou web spider
+Disallow: /
+
+User-agent: 360Spider
+Disallow: /
+
+User-agent: Slurp
+Disallow: /
+
+User-agent: Yeti
+Disallow: /
+
+# 监控面板与节点地址不对外索引。这是第一层防护，
+# 另有 X-Robots-Tag 响应头、HTML meta robots 和 _headers 三层兜底。
