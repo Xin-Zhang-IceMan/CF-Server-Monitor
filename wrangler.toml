@@ -4,6 +4,9 @@ main = "src/index.js"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
+# Workers Custom Domain：DNS 记录与证书由 Cloudflare 自动创建
+routes = [{ pattern = "monitor.toolfable.com", custom_domain = true }]
+
 keep_vars = true
 
 # 定时任务配置（UTC）
